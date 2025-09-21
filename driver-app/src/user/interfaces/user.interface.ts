@@ -1,9 +1,4 @@
-// DTO used for both validation and typing
-export enum UserRole {
-  DRIVER = 'driver',
-  SPONSOR = 'sponsor',
-  ADMIN = 'admin',
-}
+import { UserRole } from "../resources/user.enum";
 
 export interface User {
   id: string;               
