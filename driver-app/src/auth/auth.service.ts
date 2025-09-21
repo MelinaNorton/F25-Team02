@@ -1,10 +1,12 @@
 //driver-app/src/auth/auth.servics.ts
 import { Injectable, UnauthorizedException, ConflictException } from '@nestjs/common';
 import { InMemoryUserRepository } from '../user/user.repository';
-import { User, UserRole } from '../user/user.dto';
+import { User } from 'src/user/interfaces/user.interface';
+import { UserRole } from 'src/user/resources/user.enum';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
-
+import { CreateUserDto } from 'src/user/dtos/user.dto';
+import { RegisterDto } from './auth.controller';
 @Injectable()
 export class AuthService {
   constructor(
@@ -13,38 +15,28 @@ export class AuthService {
   ) {}
 
   // ---------- Registration ----------
-  async register(payload: {
-    username: string;
-    password: string;
-    name: string;
-    role: UserRole;
-    email: string;
-    // optional fields omitted for brevity
-  }): Promise<User> {
+  async register(registerDto : RegisterDto): Promise<User> {
     // enforce unique username/email
-    if (await this.usersRepo.findByUsername(payload.username)) {
+    let createUserDto = new CreateUserDto()
+    createUserDto.username = registerDto.username;
+    createUserDto.email = registerDto.email;
+    createUserDto.name = registerDto.name;
+    createUserDto.role = registerDto.role;
+   
+    if (await this.usersRepo.findByUsername(createUserDto.username)) {
       throw new ConflictException('Username already taken');
     }
-    if (await this.usersRepo.findByEmail(payload.email)) {
+    if (await this.usersRepo.findByEmail(createUserDto.email)) {
       throw new ConflictException('Email already registered');
     }
 
-    const passwordHash = await bcrypt.hash(payload.password, 10);
-    const user = await this.usersRepo.create({
-      username: payload.username,
-      passwordHash,
-      name: payload.name,
-      role: payload.role,
-      email: payload.email,
-      bio: '',
-      address: '',
-      phone: '',
-      profilePicUrl: '',
-      backupEmail: '',
-      securityQuestion: '',
-      points: 0,
-      archived: false,
-    });
+    const salt = await bcrypt.genSalt(10)
+    const passwordHash = await bcrypt.hash(registerDto.password, salt);
+    createUserDto.points = 0;
+    createUserDto.archived = false;
+    createUserDto.passwordHash = passwordHash;
+
+    const user = await this.usersRepo.create(createUserDto);
 
     return user;
   }

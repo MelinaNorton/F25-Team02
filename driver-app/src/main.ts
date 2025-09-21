@@ -6,7 +6,7 @@ async function bootstrap() {
 
   // Allow the Next dev server (http://localhost:3001) to call the API
   app.enableCors({
-    origin: 'http://localhost:3001',
+    origin: 'http://localhost:3000',
     credentials: true,
   });
 

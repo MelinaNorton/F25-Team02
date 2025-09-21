@@ -7,10 +7,10 @@ import {
   Request,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { UserRole } from '../user/user.dto';
+import { UserRole } from 'src/user/resources/user.enum';
 import { JwtAuthGuard } from './jwt-auth.guard';   // defined below
 
-class RegisterDto {
+export class RegisterDto {
   username: string;
   password: string;
   name: string;

@@ -1,16 +1,19 @@
 //driver-app/src/user/user.repository.ts
 import { Injectable } from '@nestjs/common';
-import { User, UserRole } from './user.dto';
+import { User } from './interfaces/user.interface';
+import { UserRole } from './resources/user.enum';
 import { v4 as uuidv4 } from 'uuid';
+import { CreateUserDto } from './dtos/user.dto';
+import { Body } from '@nestjs/common';
 
 @Injectable()
 export class InMemoryUserRepository {
   private readonly users = new Map<string, User>(); // key = id
 
   // ---------- CRUD ----------
-  async create(partial: Omit<User, 'id'>): Promise<User> {
+  async create(createUserDto : CreateUserDto): Promise<User> {
     const id = uuidv4();
-    const user: User = { id, ...partial };
+    const user: User = {...createUserDto, id };
     this.users.set(id, user);
     return user;
   }

@@ -1,5 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import { UpdateAdminDto } from './dto/createUserAnyType.dto';
 
 @Injectable()
 export class AdminService {
@@ -11,7 +10,7 @@ export class AdminService {
     
   }
 
-  update(id: number, updateAdminDto: UpdateAdminDto) {
+  update(id: number, ) {
     
   }
 
