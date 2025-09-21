@@ -3,6 +3,7 @@ import { AdminService } from './admin.service';
 import { CreateUserDto } from 'src/user/dtos/user.dto';
 import { InMemoryUserRepository } from 'src/user/user.repository';
 import { Request } from '@nestjs/common';
+import { UpdateUserDto } from 'src/user/dtos/updateUser.dto';
 
 @Controller('admin')
 export class AdminController {
@@ -22,27 +23,22 @@ export class AdminController {
     if (token.role!="admin" ){
       return
     }
-
     return this.userService.create(createUserDto)
   }
 
-  @Get()
-  findAll() {
-    return this.adminService.findAll();
-  }
+//handles all field changes for user specified by the dto's "id" field
+//can be applied in practice to all users necessary for the admin's ability
+  @Patch()
+  update(@Body() updateUserDto : UpdateUserDto, @Req() req : Request){
+    if(!req.body){
+      return
+    }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.adminService.findOne(+id);
-  }
+    const token = req.body['token']
+    if (token.role!="admin" ){
+      return
+    }
 
-  @Patch(':id')
-  update(@Param('id') id: string, ) {
-    //return this.adminService.update(+id);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.adminService.remove(+id);
+    return this.userService.update(updateUserDto)
   }
 }

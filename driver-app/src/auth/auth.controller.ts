@@ -48,4 +48,12 @@ export class AuthController {
   me(@Request() req) {
     return req.user; // populated by guard
   }
+
+  //will accept recovery email as sufficient data for password recovery workflow
+  @Post('/recover')
+  async recoverViaEmail(email:string) {
+    //find user via email using userService's find()
+    //success -> authService's recoverPass()
+    //failure ->error/return
+  }
 }

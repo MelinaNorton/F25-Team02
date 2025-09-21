@@ -60,4 +60,15 @@ export class AuthService {
       access_token: this.jwt.sign(payload),
     };
   }
+
+  async checkRecoveryEmail(email : string){
+    //recovery email assessment
+    //on success, frontend -> form for security question -> new password form -> recoverPassword
+    //security question form -> find(securityquestion)
+    //new password form-> recoverpassword(newpassword)
+  }
+
+  async recoverPassword(newPassword : string) {
+    //create new password endpoint for Users with hashinf/PATCH
+  }
 }

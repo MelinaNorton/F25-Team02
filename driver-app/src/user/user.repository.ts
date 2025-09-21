@@ -5,6 +5,7 @@ import { UserRole } from './resources/user.enum';
 import { v4 as uuidv4 } from 'uuid';
 import { CreateUserDto } from './dtos/user.dto';
 import { Body } from '@nestjs/common';
+import { UpdateUserDto } from './dtos/updateUser.dto';
 
 @Injectable()
 export class InMemoryUserRepository {
@@ -32,5 +33,13 @@ export class InMemoryUserRepository {
 
   async listAll(): Promise<User[]> {
     return [...this.users.values()];
+  }
+
+  async update(updateUserDto : UpdateUserDto): Promise<User | undefined> {
+    const updated = await this.users.set(updateUserDto.id, updateUserDto)
+    if(updated.get(updateUserDto.id) == undefined){
+      throw new Error("Errors updating user")
+    }
+    return updated.get(updateUserDto.id)
   }
 }
