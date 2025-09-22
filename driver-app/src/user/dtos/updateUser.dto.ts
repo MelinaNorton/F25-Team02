@@ -9,19 +9,19 @@ export class UpdateUserDto {
     
     @IsOptional()
     @IsString()
-      username: string;
+      username?: string;
 
     @IsOptional()
     @IsString()
-      passwordHash: string; 
+      passwordHash?: string; 
 
     @IsOptional()
     @IsString()
-      name: string;
+      name?: string;
 
     @IsOptional()
     @IsEnum(UserRole)
-      role: UserRole;
+      role?: UserRole;
 
     @IsOptional()
     @IsString()
@@ -33,7 +33,7 @@ export class UpdateUserDto {
 
     @IsOptional()
     @IsString()
-      email: string;
+      email?: string;
 
     @IsOptional()
     @IsString()
@@ -53,9 +53,9 @@ export class UpdateUserDto {
 
     @IsOptional()
     @IsNumber()
-      points: number;
+      points?: number;
 
     @IsOptional()
     @IsBoolean()
-      archived: boolean;
+      archived?: boolean;
 }
