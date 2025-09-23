@@ -13,6 +13,7 @@ export interface User {
   profilePicUrl?: string;
   backupEmail?: string;
   securityQuestion?: string;
+  securityQuestionAnswer?: string;
   points: number;
   archived: boolean;
 }

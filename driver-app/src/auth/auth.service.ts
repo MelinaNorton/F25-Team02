@@ -61,6 +61,8 @@ export class AuthService {
     };
   }
 
+  //use to reset password (no scurity question, since primary email?)
+  //also can use to retrieve lost username, since whole User object is returned
   async checkRecoveryEmail(email : string){
     //recovery email assessment
     const verified = this.usersRepo.findByEmail(email)
@@ -68,15 +70,22 @@ export class AuthService {
       throw new UnauthorizedException("Specified email does not exist on a user")
     }
     return verified
-    //on success, frontend -> form for security question -> new password form -> recoverPassword
-    //security question form -> find(securityquestion)
-    //new password form-> recoverpassword(newpassword)
   }
 
-  async recoverPassword(newPassword : string, id:string) {
+  async resetPassword(newPassword : string, id:string) {
     const salt = await bcrypt.genSalt(10)
     const hashPass = await bcrypt.hash(newPassword, salt)
     const updated = await this.usersRepo.update({id:id, passwordHash:hashPass})
     return updated
+  }
+
+  async checkSecurityQuestion(sqa : string, id : string){
+    const user = await this.usersRepo.findById(id)
+    const a = user?.securityQuestionAnswer
+    if(!a){
+      throw new Error("User did not set up a security question")
+    }
+    const match = sqa == a;
+    return match
   }
 }

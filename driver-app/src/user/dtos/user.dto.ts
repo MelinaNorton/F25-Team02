@@ -41,6 +41,9 @@ export class CreateUserDto {
     @IsString()
       securityQuestion?: string;
 
+    @IsString()
+      securityQuestionAnswer?: string;
+
     @IsNumber()
       points: number;
 

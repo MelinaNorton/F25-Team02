@@ -52,6 +52,10 @@ export class UpdateUserDto {
       securityQuestion?: string;
 
     @IsOptional()
+    @IsString()
+      securityQuestionAnswer?: string;
+
+    @IsOptional()
     @IsNumber()
       points?: number;
 

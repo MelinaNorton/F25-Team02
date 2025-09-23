@@ -6,6 +6,8 @@ import { v4 as uuidv4 } from 'uuid';
 import { CreateUserDto } from './dtos/user.dto';
 import { Body } from '@nestjs/common';
 import { UpdateUserDto } from './dtos/updateUser.dto';
+import { BadRequestException } from '@nestjs/common';
+import { NotFoundException } from '@nestjs/common';
 
 @Injectable()
 export class InMemoryUserRepository {
@@ -35,11 +37,25 @@ export class InMemoryUserRepository {
     return [...this.users.values()];
   }
 
-  async update(updateUserDto : UpdateUserDto): Promise<User | undefined> {
-    const updated = await this.users.set(updateUserDto.id, updateUserDto)
-    if(updated.get(updateUserDto.id) == undefined){
-      throw new Error("Errors updating user")
-    }
-    return updated.get(updateUserDto.id)
+  async update(updateUserDto: UpdateUserDto): Promise<User | undefined> {
+  const id = updateUserDto.id;
+  if (!id) {
+    throw new BadRequestException('id is required to update a user');
   }
+
+  const existing = this.users.get(id);
+  if (!existing) {
+    throw new NotFoundException('User not found');
+  }
+
+  const { id: _, ...rest } = updateUserDto;
+  const patch = Object.fromEntries(
+    Object.entries(rest).filter(([, v]) => v !== undefined)
+  ) as Partial<User>;
+
+  const updated: User = { ...existing, ...patch, id };
+
+  this.users.set(id, updated);
+  return updated;
+}
 }
